@@ -1,4 +1,3 @@
-
 CREATE OR REPLACE PROCEDURE `deid_demo_input.deidentify_table` (table_input_variables string)
 BEGIN
 
@@ -320,7 +319,7 @@ Create the output tables
       SELECT 'ok' ; 
     ELSE 
       EXECUTE IMMEDIATE (
-        SELECT 'CREATE OR REPLACE TABLE ' || table_name_output_mapping || ' (row_id INT64 , original_value string , de_id_value string ) ; '
+        SELECT 'CREATE OR REPLACE TABLE ' || table_name_output_mapping || ' (row_id INT64 , column_name string, original_value string , de_id_value string ) ; '
       FROM table_input_variables_data
       ) ; 
     END IF ;
@@ -348,15 +347,15 @@ Create the output tables
 # Run logic for columns masked but relative
       IF (SELECT col_rule = 'columns_masked_but_relative' FROM column_action) THEN
 
-        # Create 3 column values 
+        # Create 4 column values 
         EXECUTE IMMEDIATE (
-          SELECT 'CREATE OR REPLACE TEMP TABLE temp_3_column_format AS SELECT row_id, ' || column_name || ' as original_value, dense_rank() over (order by ' || column_name || ' ) as de_id_value FROM table_input_data ;'
+          SELECT 'CREATE OR REPLACE TEMP TABLE temp_3_column_format AS SELECT row_id, \'' || column_name || '\' as column_name, ' || column_name || ' as original_value, dense_rank() over (order by ' || column_name || ' ) as de_id_value FROM table_input_data ;'
           FROM column_action
         ) ; 
 
-        # Insert 3 column values into output_mapping_table
+        # Insert 4 column values into output_mapping_table
         EXECUTE IMMEDIATE (
-          SELECT 'INSERT INTO ' || table_name_output_mapping || ' SELECT row_id, cast(original_value as string) as original_value, cast(de_id_value as string) as de_id_value FROM temp_3_column_format ;' 
+          SELECT 'INSERT INTO ' || table_name_output_mapping || ' SELECT row_id, column_name, cast(original_value as string) as original_value, cast(de_id_value as string) as de_id_value FROM temp_3_column_format ;' 
         FROM table_input_variables_data 
         ) ; 
 
