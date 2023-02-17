@@ -1,4 +1,4 @@
-patient_id,encounter_id,coid,admission_date,discharge_date,last_updated_date,drg,race,age,cost_encounter
+patient_id,encounter_id,facility,admission_date,discharge_date,last_updated_date,drg,race,age,cost_encounter
 9182,G902,8712,2022-12-24,2023-01-01,2023-01-11,175,green,11,710.0
 5819,Z981,1234,2022-11-14,2022-11-15,2022-11-25,1829,blue,72,1098.0
 1234,A182,1234,2023-01-15,2023-01-19,2023-01-29,1273,red,58,1991.2
